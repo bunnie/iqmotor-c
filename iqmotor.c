@@ -16,7 +16,7 @@
 
 struct timespec ts_ref = {0, 0};
 
-struct iqMotor *createIqMotor( const char *path ) {
+struct iqMotor *iqCreateMotor( const char *path ) {
   struct iqMotor *iqm = NULL;
   int pathlen;
 
@@ -51,7 +51,26 @@ struct iqMotor *createIqMotor( const char *path ) {
   return iqm;
 }
 
-double readAngle( struct iqMotor *motor ) {
+
+int iqSetCoast( struct iqMotor *motor ) {
+  // This buffer is for passing around messages.
+  uint8_t communication_buffer_in[IQ_BUFLEN];
+  // Stores length of message to send or receive
+  uint8_t communication_length_in;
+
+  motor->mta_client->ctrl_coast_.set(*(motor->iq_com)); // put the input controller in "coast" mode
+  // Grab outbound messages in the com queue, store into buffer
+  // If it transferred something to communication_buffer...
+  if(motor->iq_com->GetTxBytes(communication_buffer_in, communication_length_in)) {
+    write(motor->fd, communication_buffer_in, communication_length_in);
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
+
+double iqReadAngle( struct iqMotor *motor ) {
   // This buffer is for passing around messages.
   uint8_t communication_buffer_in[IQ_BUFLEN];
   uint8_t communication_buffer_out[IQ_BUFLEN];
@@ -63,8 +82,6 @@ double readAngle( struct iqMotor *motor ) {
 
   ///////////// READ THE INPUT CONTROLLER
   // Generate the set messages
-  
-  motor->mta_client->ctrl_coast_.set(*(motor->iq_com)); // put the input controller in "coast" mode
   motor->mta_client->obs_angular_displacement_.get(*(motor->iq_com)); // get the angular displacement
 
   // Grab outbound messages in the com queue, store into buffer
@@ -101,7 +118,7 @@ double readAngle( struct iqMotor *motor ) {
   return angle;
 }
 
-void setAngle( struct iqMotor *motor, double target_angle, unsigned long travel_time_ms ) {
+void iqSetAngle( struct iqMotor *motor, double target_angle, unsigned long travel_time_ms ) {
   // This buffer is for passing around messages.
   uint8_t communication_buffer_in[IQ_BUFLEN];
   uint8_t communication_buffer_out[IQ_BUFLEN];
@@ -123,11 +140,11 @@ void setAngle( struct iqMotor *motor, double target_angle, unsigned long travel_
   }
 }
 
-void setAngleDelta( struct iqMotor *motor, double target_angle_delta, unsigned long travel_time_ms ) {
+void iqSetAngleDelta( struct iqMotor *motor, double target_angle_delta, unsigned long travel_time_ms ) {
   double cur_angle;
 
-  cur_angle = readAngle( motor );
-  setAngle( motor, cur_angle + target_angle_delta, travel_time_ms );
+  cur_angle = iqReadAngle( motor );
+  iqSetAngle( motor, cur_angle + target_angle_delta, travel_time_ms );
 }
 
 

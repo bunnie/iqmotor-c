@@ -23,24 +23,28 @@ typedef struct iqMotor {
 // Returns: iqMotor control object
 //
 // Side effects: sets terminal options on the COM port for motor control
-struct iqMotor *createIqMotor( const char *path );
+struct iqMotor *iqCreateMotor( const char *path );
+
+// Set a motor to "coast" mode, so it's not driving a fixed position
+// Arguments: motor object
+int iqSetCoast( struct iqMotor *motor );
 
 // read the angle of a motor
 // Arguments: motor_obj (already initialized with prior call to createIqMotor)
 // Returns: current angle of motor, in radians
-double readAngle( struct iqMotor *motor );
+double iqReadAngle( struct iqMotor *motor );
 
 // set the angle of a motor
-// Arguments: motor_obj (already initialized with prior call to createIqMotor)
+// Arguments: motor object
 // target_angle: double that sets the target angle of the motor in radians
 // trave_time_ms: target travel time to get to that angle -- may not be achievable if too short!
-void setAngle( struct iqMotor *motor, double target_angle, unsigned long travel_time_ms );
+void iqSetAngle( struct iqMotor *motor, double target_angle, unsigned long travel_time_ms );
 
 // set delta angle based on current angle
-// Arguments: motor_obj (already initialized with prior call to createIqMotor)
+// Arguments: motor object
 // target_angle: double that specifies the desired angular offset from whatever the current angle is
 // trave_time_ms: target travel time to get to that angle -- may not be achievable if too short!
-void setAngleDelta( struct iqMotor *motor, double target_angle_delta, unsigned long travel_time_ms );
+void iqSetAngleDelta( struct iqMotor *motor, double target_angle_delta, unsigned long travel_time_ms );
 
 #define IQ_BUFLEN 1024   // length of IQ message buffer
 
