@@ -38,7 +38,7 @@ int main() {
 
     iqSetAngle(motor1, 0, 2000);
     sleep(2);
-    iqSetAngle(motor1, 6.28, 2000);
+    iqSetAngle(motor1, 6.28, 2000);  // radians: ~6.28 = 360 degrees
     sleep(2);
     iqSetAngle(motor1, 0, 2000);
     sleep(2);

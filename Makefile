@@ -4,7 +4,7 @@ CFLAGS= -std=gnu++0x
 OUTPUTNAME=iq_demo
 
 # add all source files here but with '.o' instead of '.c'
-OBJS=bidir_copy_demo.o generic_interface.o byte_queue.o crc_helper.o packet_finder.o iqmotor.o
+OBJS=simple_turn_demo.cpp generic_interface.o byte_queue.o crc_helper.o packet_finder.o iqmotor.o
 
 default: all
 
