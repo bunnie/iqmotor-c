@@ -105,7 +105,8 @@ double iqReadAngle( struct iqMotor *motor ) {
   // while we have message packets to parse
   while(motor->iq_com->PeekPacket(&rx_data, &rx_length)) {
     // Share that packet with all client objects
-    motor->mta_client->ReadMsg(*(motor->iq_com), rx_data, rx_length);
+    //    motor->mta_client->ReadMsg(*(motor->iq_com), rx_data, rx_length);
+    motor->mta_client->ReadMsg(rx_data, rx_length);
     
     // Once we're done with the message packet, drop it
     motor->iq_com->DropPacket();
@@ -127,6 +128,8 @@ void iqSetAngle( struct iqMotor *motor, double target_angle, unsigned long trave
   uint8_t communication_length_out;
 
   /////////////// WRITE OUTPUT CONTROLLER
+  motor->mta_client->ctrl_mode_.set(*(motor->iq_com), 6); // put the input controller in "coast" mode
+  
   // Generate the set messages
   motor->mta_client->trajectory_angular_displacement_.set(*(motor->iq_com), (float) target_angle);
   motor->mta_client->trajectory_duration_.set(*(motor->iq_com), (float) travel_time_ms / 1000.0 ); 

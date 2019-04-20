@@ -1,7 +1,7 @@
 #include <time.h>
 
-#include "generic_interface.hpp"
-#include "multi_turn_angle_control_client.hpp"
+#include "iq-module-communication-cpp/inc/generic_interface.hpp"
+#include "iq-module-communication-cpp/inc/multi_turn_angle_control_client.hpp"
 
 // Simplified functions for talking to IQ devices over COM ports
 // Best for Linux users. Might even work for iOS. Probably doesn't work for windows.

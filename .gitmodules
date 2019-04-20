@@ -1,0 +1,3 @@
+[submodule "iq-module-communication-cpp"]
+	path = iq-module-communication-cpp
+	url = https://github.com/iq-motion-control/iq-module-communication-cpp.git
