@@ -26,6 +26,7 @@ struct iqMotor *iqCreateMotor( const char *path ) {
 
   iqm->iq_com = new GenericInterface();
   iqm->mta_client = new MultiTurnAngleControlClient(0);
+  iqm->bl_client = new BrushlessDriveClient(0);
 
   pathlen = strlen(path);
   if( pathlen >= PATH_MAX ) {
@@ -66,6 +67,51 @@ int iqSetCoast( struct iqMotor *motor ) {
     return 0;
   } else {
     return 1;
+  }
+}
+
+int iqBlSetCoast( struct iqMotor *motor ) {
+  uint8_t communication_buffer_in[IQ_BUFLEN];
+  uint8_t communication_length_in;
+  
+  motor->bl_client->drive_coast_.set(*(motor->iq_com));
+  if(motor->iq_com->GetTxBytes(communication_buffer_in, communication_length_in)) {
+    write(motor->fd, communication_buffer_in, communication_length_in);
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
+int iqBlSetBreak( struct iqMotor *motor ) {
+  uint8_t communication_buffer_out[IQ_BUFLEN];
+  uint8_t communication_length_out;
+  
+  motor->bl_client->drive_brake_.set(*(motor->iq_com));
+  if(motor->iq_com->GetTxBytes(communication_buffer_out, communication_length_out)) {
+    write(motor->fd, communication_buffer_out, communication_length_out);
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
+void iqBlSetPwm( struct iqMotor *motor, double pwm ) {
+  // This buffer is for passing around messages.
+  uint8_t communication_buffer_out[IQ_BUFLEN];
+  // Stores length of message to send or receive
+  uint8_t communication_length_out;
+
+  if( pwm > 1.0 || pwm < -1.0 ) {
+    printf( "pwm value %0.2f is out of range! aborting.\n", pwm );
+    return;
+  }
+  motor->bl_client->drive_mode_.set(*(motor->iq_com), 2); // put the controller in spin_pwm mode
+  
+  motor->bl_client->drive_spin_pwm_.set(*(motor->iq_com), (float) pwm);
+
+  if(motor->iq_com->GetTxBytes(communication_buffer_out, communication_length_out)) {
+    write(motor->fd, communication_buffer_out, communication_length_out);
   }
 }
 

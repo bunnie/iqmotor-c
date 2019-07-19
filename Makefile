@@ -6,7 +6,7 @@ OUTPUTNAME=iq_demo
 
 OBJS=iq-module-communication-cpp/src/generic_interface.o iq-module-communication-cpp/inc/client_communication.o iq-module-communication-cpp/src/byte_queue.o iq-module-communication-cpp/src/crc_helper.o iq-module-communication-cpp/src/packet_finder.o iqmotor.o
 
-default: simplest_demo
+default: brushless_demo
 
 # How to build an object file (x.o) from a corresponding C source file (x.c)
 .c.o:
@@ -15,6 +15,9 @@ default: simplest_demo
 # How to build an object file from a corresponding C++ source file (x.cpp)
 .cpp.o:
 	$(CXX) $(INCLUDES) $(CFLAGS) -c -o $@ $<
+
+brushless_demo: brushless_demo.o $(OBJS) 
+	$(CC) $(CFLAGS) $(INC) -o $(OUTPUTNAME) $(OBJS) $@.o
 
 simplest_demo: simplest_demo.o $(OBJS) 
 	$(CC) $(CFLAGS) $(INC) -o $(OUTPUTNAME) $(OBJS) $@.o

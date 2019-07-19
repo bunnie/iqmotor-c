@@ -30,7 +30,7 @@ int main() {
     if( kb_hit() )
       break;
 
-    iqSetAngle(motor0, 3.14 * 10, 2000);  // radians: ~6.28 = 360 degrees
+    iqSetAngle(motor0, 3.14 * 2, 2000);  // radians: ~6.28 = 360 degrees
     sleep(2);
     iqSetAngle(motor0, 0, 2000);
     sleep(2);

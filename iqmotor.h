@@ -2,6 +2,7 @@
 
 #include "iq-module-communication-cpp/inc/generic_interface.hpp"
 #include "iq-module-communication-cpp/inc/multi_turn_angle_control_client.hpp"
+#include "iq-module-communication-cpp/inc/brushless_drive_client.hpp"
 
 // Simplified functions for talking to IQ devices over COM ports
 // Best for Linux users. Might even work for iOS. Probably doesn't work for windows.
@@ -12,7 +13,8 @@ typedef struct iqMotor {
   char *com_path;
   int fd;
   GenericInterface *iq_com;
-  MultiTurnAngleControlClient *mta_client;  
+  MultiTurnAngleControlClient *mta_client;
+  BrushlessDriveClient *bl_client;
 } iqMotor;
 
 // Create IqMotor object and bind a COM port path to it
@@ -58,3 +60,8 @@ unsigned long elapsed_ms();
 int set_interface_attribs (int fd, int speed, int parity);
 void setup_console();  // setup console for non-blocking operation
 int kb_hit();  // returns true if keyboard is hit
+
+// brushless motor controller client calls
+int iqBlSetBreak( struct iqMotor *motor );
+int iqBlSetCoast( struct iqMotor *motor );
+void iqBlSetPwm( struct iqMotor *motor, double pwm );
