@@ -79,6 +79,8 @@ int main(int argc, char **argv) {
       printf("%0.3f\n", speed);
       iqBlSetPwm(motor0, speed);
     }
+    double velocity = iqBlReadVelocity( motor0 );
+    printf( "%f rpm\r", (velocity / (2 * 3.14159265)) * 60.0 );
   }
   disableRawMode();
   
