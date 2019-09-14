@@ -115,7 +115,7 @@ void iqBlSetPwm( struct iqMotor *motor, double pwm ) {
   }
 }
 
-double iqBlReadVelocity( struct iqMotor *motor ) {
+float iqBlReadVelocity( struct iqMotor *motor ) {
   // This buffer is for passing around messages.
   uint8_t communication_buffer_in[IQ_BUFLEN];
   uint8_t communication_buffer_out[IQ_BUFLEN];
@@ -127,8 +127,8 @@ double iqBlReadVelocity( struct iqMotor *motor ) {
 
   ///////////// READ THE INPUT CONTROLLER
   // Generate the set messages
-  motor->bl_client->obs_velocity_.get(*(motor->iq_com)); // get the angular displacement
-
+  motor->mta_client->obs_angular_velocity_.get(*(motor->iq_com)); // get the angular displacement
+  
   // Grab outbound messages in the com queue, store into buffer
   // If it transferred something to communication_buffer...
   if(motor->iq_com->GetTxBytes(communication_buffer_in, communication_length_in)) {
@@ -150,13 +150,13 @@ double iqBlReadVelocity( struct iqMotor *motor ) {
   // while we have message packets to parse
   while(motor->iq_com->PeekPacket(&rx_data, &rx_length)) {
     // Share that packet with all client objects
-    motor->bl_client->ReadMsg(rx_data, rx_length);
+    motor->mta_client->ReadMsg(rx_data, rx_length);
     
     // Once we're done with the message packet, drop it
     motor->iq_com->DropPacket();
   }
 
-  angle = motor->bl_client->obs_velocity_.get_reply();
+  angle = motor->mta_client->obs_angular_velocity_.get_reply();
     
   return angle;
 }

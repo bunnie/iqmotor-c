@@ -65,4 +65,4 @@ int kb_hit();  // returns true if keyboard is hit
 int iqBlSetBreak( struct iqMotor *motor );
 int iqBlSetCoast( struct iqMotor *motor );
 void iqBlSetPwm( struct iqMotor *motor, double pwm );
-double iqBlReadVelocity( struct iqMotor *motor );
+float iqBlReadVelocity( struct iqMotor *motor );
