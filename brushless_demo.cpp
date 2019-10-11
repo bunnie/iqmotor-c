@@ -88,16 +88,16 @@ int main(int argc, char **argv) {
       if( read(STDIN_FILENO, &c, 1) == 1 && c != 'q' ) {
 	if( c == 'a') {
 	  speed += 0.01;
-	  if( speed > 0.3 ) {
-	    speed = 0.3;
+	  if( speed > 1.0 ) {
+	    speed = 1.0;
 	  }
 	  printf("%0.3f\n", speed);
 	  iqBlSetPwm(motor0, speed);
 	}
 	if( c == 'o' ) {
 	  speed -= 0.01;
-	  if( speed < -0.3 ) {
-	    speed = -0.3;
+	  if( speed < 0.0 ) {
+	    speed = 0.0;
 	  }
 	  printf("%0.3f\n", speed);
 	  iqBlSetPwm(motor0, speed);
